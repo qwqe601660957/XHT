@@ -1,0 +1,54 @@
+apply plugin: 'com.android.library'
+
+//apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.github.dcendents.android-maven' // 增加
+group='com.github.myszzz'
+android {
+    compileSdkVersion 26
+
+
+
+    defaultConfig {
+        minSdkVersion 18
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    //网络框架
+    api 'com.yanzhenjie.nohttp:nohttp:1.1.1'
+    //json框架
+    implementation 'com.google.code.gson:gson:2.8.5'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    api 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.3.1'
+}
+
+//publish {
+//    userOrg = 'myszzz'//bintray.com用户名
+//    repoName = "minitools"   //bintray上常见的仓库的名字
+//    groupId = 'com.wx.minitools'//groupId  一般为包名
+//    artifactId = 'minitools'//artifactId 一般为项目名称
+//    publishVersion = '1.0.0'//版本号
+//    desc = 'this is a util'//描述，不重要
+//    website = 'https://gitee.com/mys666/minitools.git'//网站,一般是GitHub的项目地址，一定要是可以访问到的地址
+//}
