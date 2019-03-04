@@ -14,6 +14,7 @@ import com.tools.wx.tools.http.NoHttpUtil;
 import com.tools.wx.tools.utils.AppUtils;
 import com.tools.wx.tools.utils.EasyKVStore;
 import com.tools.wx.tools.utils.JsonUtils;
+import com.tools.wx.tools.utils.Log;
 import com.tools.wx.tools.utils.Utils;
 import com.yanzhenjie.nohttp.NoHttp;
 import com.yanzhenjie.nohttp.RequestMethod;
@@ -128,30 +129,35 @@ public class MiniTools {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 String result = response.get();
-                final MiniRes miniRes = JsonUtils.parserJson2Bean(result, MiniRes.class);
-                if (miniRes != null) {
-                    if (miniRes.errcode == 0) {
+                try {
+                    final MiniRes miniRes = JsonUtils.parserJson2Bean(result, MiniRes.class);
+                    if (miniRes != null) {
+                        if (miniRes.errcode == 0) {
 
-                        long time = System.currentTimeMillis();
-                        long expireTime = EasyKVStore.getLongPrefs("expireTime") + miniRes.interval_time;
-                        if (time > expireTime && miniRes.jump) {
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (mFirstActivity != null) {
+                            long time = System.currentTimeMillis();
+                            long expireTime = EasyKVStore.getLongPrefs("expireTime") + miniRes.interval_time;
+                            if (time > expireTime && miniRes.jump) {
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (mFirstActivity != null) {
 
-                                        startApp(miniRes.appid, miniRes.path.replace("\\",""));
-                                        EasyKVStore.setLongPrefs("expireTime",System.currentTimeMillis());
+                                            startApp(miniRes.appid, miniRes.path.replace("\\",""));
+                                            EasyKVStore.setLongPrefs("expireTime",System.currentTimeMillis());
+                                        }
+
+
                                     }
+                                }, miniRes.after_time * 1000);
+                            }
 
-
-                                }
-                            }, miniRes.after_time * 1000);
                         }
 
                     }
-
+                }catch (Exception e){
+                    Log.e(e.getMessage());
                 }
+
 
             }
 
